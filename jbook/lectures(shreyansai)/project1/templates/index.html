@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CardioKNN — Heart Disease AI</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="clean-theme">
+    <!-- Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="brand">
+                <i class="fa-solid fa-heart-pulse logo-icon"></i>
+                <span class="logo-text">Cardio<strong>KNN</strong></span>
+            </div>
+            <div class="nav-badge">
+                <span class="dot"></span> KNN Model (k=5)
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Quick Demo Presets Banner -->
+        <section class="demo-section">
+            <div class="demo-header">
+                <span class="demo-title"><i class="fa-solid fa-bolt"></i> Quick Demo Patients:</span>
+            </div>
+            <div class="preset-group">
+                <button type="button" class="preset-chip" data-preset="low_risk">
+                    <i class="fa-solid fa-circle-check text-emerald"></i> Healthy Adult (Low Risk)
+                </button>
+                <button type="button" class="preset-chip" data-preset="moderate_risk">
+                    <i class="fa-solid fa-circle-minus text-amber"></i> Moderate Risk Patient
+                </button>
+                <button type="button" class="preset-chip" data-preset="high_risk">
+                    <i class="fa-solid fa-triangle-exclamation text-crimson"></i> High Risk Cardiac Patient
+                </button>
+            </div>
+        </section>
+
+        <!-- Main Layout: 2 Columns -->
+        <div class="layout-grid">
+            <!-- Left: Inputs -->
+            <div class="card form-card">
+                <div class="card-title-bar">
+                    <h3><i class="fa-solid fa-sliders"></i> Clinical Inputs</h3>
+                    <button type="button" class="reset-link" id="resetFormBtn"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                </div>
+
+                <form id="predictionForm">
+                    <!-- Row 1: Vitals -->
+                    <div class="form-row">
+                        <div class="field-group">
+                            <label for="Age">Age</label>
+                            <input type="number" id="Age" name="Age" min="18" max="100" value="45" required>
+                        </div>
+                        <div class="field-group">
+                            <label>Gender</label>
+                            <div class="toggle-switch">
+                                <label><input type="radio" name="Sex" value="M" checked> <span>Male</span></label>
+                                <label><input type="radio" name="Sex" value="F"> <span>Female</span></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field-group">
+                            <label for="RestingBP">Resting BP (mm Hg)</label>
+                            <input type="number" id="RestingBP" name="RestingBP" min="80" max="220" value="120" required>
+                        </div>
+                        <div class="field-group">
+                            <label for="Cholesterol">Cholesterol (mg/dL)</label>
+                            <input type="number" id="Cholesterol" name="Cholesterol" min="0" max="600" value="200" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field-group">
+                            <label for="MaxHR">Max Heart Rate (bpm)</label>
+                            <input type="number" id="MaxHR" name="MaxHR" min="60" max="220" value="150" required>
+                        </div>
+                        <div class="field-group">
+                            <label for="FastingBS">Fasting Blood Sugar</label>
+                            <select id="FastingBS" name="FastingBS">
+                                <option value="0">Normal (≤ 120 mg/dL)</option>
+                                <option value="1">Elevated (> 120 mg/dL)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Symptoms & ECG -->
+                    <div class="form-group-box">
+                        <label>Chest Pain Type</label>
+                        <div class="chip-options">
+                            <label><input type="radio" name="ChestPainType" value="ATA" checked> <span>Atypical (ATA)</span></label>
+                            <label><input type="radio" name="ChestPainType" value="NAP"> <span>Non-Anginal (NAP)</span></label>
+                            <label><input type="radio" name="ChestPainType" value="ASY"> <span>Asymptomatic (ASY)</span></label>
+                            <label><input type="radio" name="ChestPainType" value="TA"> <span>Typical (TA)</span></label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="field-group">
+                            <label for="RestingECG">Resting ECG</label>
+                            <select id="RestingECG" name="RestingECG">
+                                <option value="Normal">Normal</option>
+                                <option value="ST">ST Abnormality</option>
+                                <option value="LVH">LV Hypertrophy</option>
+                            </select>
+                        </div>
+                        <div class="field-group">
+                            <label for="ExerciseAngina">Exercise Angina</label>
+                            <select id="ExerciseAngina" name="ExerciseAngina">
+                                <option value="N">No Angina</option>
+                                <option value="Y">Yes Induced</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: ST Slope -->
+                    <div class="form-group-box">
+                        <div class="slider-header">
+                            <label for="Oldpeak">ST Depression (Oldpeak)</label>
+                            <span class="slider-num" id="oldpeakVal">0.0 mm</span>
+                        </div>
+                        <input type="range" id="Oldpeak" name="Oldpeak" min="0.0" max="6.0" step="0.1" value="0.0">
+                    </div>
+
+                    <div class="form-group-box">
+                        <label>Peak ST Slope</label>
+                        <div class="chip-options three-cols">
+                            <label><input type="radio" name="ST_Slope" value="Up" checked> <span>Upsloping</span></label>
+                            <label><input type="radio" name="ST_Slope" value="Flat"> <span>Flat</span></label>
+                            <label><input type="radio" name="ST_Slope" value="Down"> <span>Downsloping</span></label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="predictBtn">
+                        <i class="fa-solid fa-play"></i> Run Prediction
+                    </button>
+                </form>
+            </div>
+
+            <!-- Right: Prediction Results -->
+            <div class="card results-card" id="resultsCard">
+                <!-- Initial State -->
+                <div class="card-placeholder" id="placeholderState">
+                    <i class="fa-solid fa-heart-pulse placeholder-icon"></i>
+                    <h4>Ready for Prediction</h4>
+                    <p>Select a quick demo patient above or adjust inputs and click <strong>Run Prediction</strong>.</p>
+                </div>
+
+                <!-- Loading State -->
+                <div class="card-loading hidden" id="loadingState">
+                    <div class="spinner"></div>
+                    <p>Running KNN classifier...</p>
+                </div>
+
+                <!-- Output State -->
+                <div class="card-output hidden" id="outputState">
+                    <!-- Status Banner -->
+                    <div class="status-banner" id="statusBanner">
+                        <div class="status-icon" id="statusIcon"></div>
+                        <div class="status-text">
+                            <span class="status-tag">KNN Prediction</span>
+                            <h2 id="riskTitle">Low Risk / Normal</h2>
+                        </div>
+                    </div>
+
+                    <!-- Risk Gauge Ring -->
+                    <div class="score-display">
+                        <div class="ring-container">
+                            <svg class="ring-svg" viewBox="0 0 100 100">
+                                <circle class="ring-bg" cx="50" cy="50" r="42"></circle>
+                                <circle class="ring-val" id="ringVal" cx="50" cy="50" r="42"></circle>
+                            </svg>
+                            <div class="ring-text">
+                                <span class="ring-pct" id="riskScorePct">0%</span>
+                                <span class="ring-lbl">Risk Score</span>
+                            </div>
+                        </div>
+
+                        <div class="score-meta">
+                            <div class="meta-row">
+                                <span>Normal / Low Risk:</span>
+                                <strong id="lowProbText">100%</strong>
+                            </div>
+                            <div class="meta-row">
+                                <span>Heart Disease Risk:</span>
+                                <strong id="highProbText">0%</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Observations -->
+                    <div class="obs-section">
+                        <h4>Clinical Observations</h4>
+                        <div class="obs-list" id="obsList"></div>
+                    </div>
+
+                    <!-- Nearest Neighbors -->
+                    <div class="neighbors-box">
+                        <h4>KNN Nearest Neighbors (k=5)</h4>
+                        <div class="neighbors-pills" id="neighborsPills"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
