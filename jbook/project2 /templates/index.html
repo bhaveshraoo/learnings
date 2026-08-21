@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraMind — Mental Health Score Predictor</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Subtle Background Botanical & Sketch Accents -->
+    <div class="bg-sketch bg-sketch-top-left">
+        <!-- Floating Books Line Art Sketch -->
+        <svg width="220" height="220" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M40 140 C70 130, 90 140, 100 145 C110 140, 130 130, 160 140 L160 60 C130 50, 110 60, 100 65 C90 60, 70 50, 40 60 Z" stroke="#332c30" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="#ffffff" fill-opacity="0.7"/>
+            <path d="M100 65 L100 145" stroke="#332c30" stroke-width="2" stroke-dasharray="3 3"/>
+            <path d="M45 75 C70 68, 90 76, 95 79" stroke="#52484d" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M45 90 C70 83, 90 91, 95 94" stroke="#52484d" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M45 105 C70 98, 90 106, 95 109" stroke="#52484d" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M155 75 C130 68, 110 76, 105 79" stroke="#52484d" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M155 90 C130 83, 110 91, 105 94" stroke="#52484d" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M155 105 C130 98, 110 106, 105 109" stroke="#52484d" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- Bookmark Ribbon -->
+            <path d="M100 65 Q115 90 110 120 L118 112 L126 120 Q122 95 100 65" fill="#e8aebb" stroke="#332c30" stroke-width="1.5"/>
+        </svg>
+    </div>
+
+    <div class="bg-sketch bg-sketch-bottom-right">
+        <!-- Notebook & Fountain Pen Sketch -->
+        <svg width="240" height="240" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Spiral Notebook -->
+            <rect x="35" y="30" width="110" height="140" rx="8" stroke="#332c30" stroke-width="2.5" fill="#ffffff" fill-opacity="0.8"/>
+            <line x1="35" y1="45" x2="145" y2="45" stroke="#332c30" stroke-width="1.5"/>
+            <!-- Spiral Rings -->
+            <circle cx="35" cy="55" r="4" stroke="#332c30" stroke-width="2" fill="#f4d3dc"/>
+            <circle cx="35" cy="75" r="4" stroke="#332c30" stroke-width="2" fill="#f4d3dc"/>
+            <circle cx="35" cy="95" r="4" stroke="#332c30" stroke-width="2" fill="#f4d3dc"/>
+            <circle cx="35" cy="115" r="4" stroke="#332c30" stroke-width="2" fill="#f4d3dc"/>
+            <circle cx="35" cy="135" r="4" stroke="#332c30" stroke-width="2" fill="#f4d3dc"/>
+            <circle cx="35" cy="155" r="4" stroke="#332c30" stroke-width="2" fill="#f4d3dc"/>
+            <!-- Notebook ruled lines -->
+            <line x1="50" y1="70" x2="130" y2="70" stroke="#8c8085" stroke-width="1" stroke-dasharray="4 2"/>
+            <line x1="50" y1="90" x2="130" y2="90" stroke="#8c8085" stroke-width="1" stroke-dasharray="4 2"/>
+            <line x1="50" y1="110" x2="130" y2="110" stroke="#8c8085" stroke-width="1" stroke-dasharray="4 2"/>
+            <line x1="50" y1="130" x2="120" y2="130" stroke="#8c8085" stroke-width="1" stroke-dasharray="4 2"/>
+            <!-- Fountain Pen Overlay -->
+            <g transform="rotate(-35 140 100)">
+                <path d="M130 10 L142 10 L140 140 L132 140 Z" fill="#ffffff" stroke="#332c30" stroke-width="2"/>
+                <path d="M132 140 L136 165 L140 140 Z" fill="#332c30"/>
+                <circle cx="136" cy="150" r="1.5" fill="#ffffff"/>
+                <path d="M136 10 L136 50" stroke="#332c30" stroke-width="1.5"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Main Outer Wrapper -->
+    <div class="app-container">
+        
+        <!-- Header & Hero -->
+        <header class="hero-header">
+            <div class="brand-badge">
+                <span class="badge-dot"></span> Mindful Autumn Aesthetics
+            </div>
+
+            <!-- Brain Floral Sketch Hero Icon -->
+            <div class="brain-sketch-hero">
+                <svg width="120" height="120" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Left Brain Hemisphere - Logical Line Sketch -->
+                    <path d="M78 30 C50 30, 30 50, 30 80 C30 105, 45 125, 78 135" stroke="#332c30" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <path d="M55 45 C45 60, 45 75, 60 85 C70 92, 50 110, 75 120" stroke="#52484d" stroke-width="2" stroke-linecap="round" fill="none"/>
+                    <path d="M38 75 C52 75, 65 60, 72 70" stroke="#52484d" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                    <!-- Right Brain Hemisphere - Creative Blooming Botanical Sketch -->
+                    <path d="M82 30 C110 30, 130 50, 130 80 C130 105, 115 125, 82 135" stroke="#332c30" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    <!-- Floral Vines and Leaves -->
+                    <path d="M82 40 Q110 50 105 75 T120 110" stroke="#d16b84" stroke-width="2.2" fill="none"/>
+                    <path d="M105 55 C115 45, 125 50, 120 60 C110 65, 105 55, 105 55 Z" fill="#f4d3dc" stroke="#332c30" stroke-width="1.5"/>
+                    <path d="M110 80 C125 75, 132 85, 122 92 C115 95, 110 80, 110 80 Z" fill="#e8aebb" stroke="#332c30" stroke-width="1.5"/>
+                    <path d="M92 98 C105 98, 110 112, 98 118 C90 115, 92 98, 92 98 Z" fill="#fbebf0" stroke="#332c30" stroke-width="1.5"/>
+                    <circle cx="80" cy="82.5" r="3" fill="#332c30"/>
+                </svg>
+            </div>
+
+            <h1 class="main-title">Mental Health Score Predictor</h1>
+            <p class="subtitle">A serene assessment of your daily lifestyle, screen habits, and psychological well-being.</p>
+        </header>
+
+        <!-- Main Grid Layout -->
+        <main class="main-content">
+            
+            <!-- Assessment Form -->
+            <form id="prediction-form" class="assessment-card">
+                
+                <!-- Section 1: Demographics & Identity -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fa-regular fa-user"></i>
+                        </div>
+                        <div>
+                            <h2>Personal Profile</h2>
+                            <p class="section-desc">Basic demographic context for baseline calibration</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <!-- Age Slider -->
+                        <div class="input-group">
+                            <label for="Age">Age: <span id="val-Age" class="value-badge">21</span> yrs</label>
+                            <input type="range" id="Age" name="Age" min="18" max="25" value="21" class="custom-slider">
+                            <div class="slider-labels">
+                                <span>18</span>
+                                <span>21</span>
+                                <span>25</span>
+                            </div>
+                        </div>
+
+                        <!-- Gender Select Pills -->
+                        <div class="input-group">
+                            <label>Gender</label>
+                            <div class="pill-options" id="Gender-options">
+                                <label class="pill-btn active">
+                                    <input type="radio" name="Gender" value="Female" checked> Female
+                                </label>
+                                <label class="pill-btn">
+                                    <input type="radio" name="Gender" value="Male"> Male
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Country Selection -->
+                        <div class="input-group">
+                            <label for="Country">Country</label>
+                            <select id="Country" name="Country" class="custom-select">
+                                <option value="India" selected>India</option>
+                                <option value="USA">USA</option>
+                                <option value="Canada">Canada</option>
+                                <option value="UK">United Kingdom</option>
+                                <option value="Australia">Australia</option>
+                                <option value="Germany">Germany</option>
+                                <option value="France">France</option>
+                                <option value="Mexico">Mexico</option>
+                                <option value="Turkey">Turkey</option>
+                                <option value="Other">Other Country</option>
+                            </select>
+                        </div>
+
+                        <!-- Academic Level -->
+                        <div class="input-group">
+                            <label>Academic Level</label>
+                            <div class="pill-options" id="Academic_Level-options">
+                                <label class="pill-btn active">
+                                    <input type="radio" name="Academic_Level" value="Undergraduate" checked> Undergraduate
+                                </label>
+                                <label class="pill-btn">
+                                    <input type="radio" name="Academic_Level" value="Graduate"> Graduate
+                                </label>
+                                <label class="pill-btn">
+                                    <input type="radio" name="Academic_Level" value="High School"> High School
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-divider">
+                    <svg height="24" width="100%" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="0" y1="12" x2="45%" y2="12" stroke="#ebd2d8" stroke-width="1.5" stroke-dasharray="6 4"/>
+                        <circle cx="50%" cy="12" r="4" fill="#d16b84"/>
+                        <line x1="55%" y1="12" x2="100%" y2="12" stroke="#ebd2d8" stroke-width="1.5" stroke-dasharray="6 4"/>
+                    </svg>
+                </div>
+
+                <!-- Section 2: Digital Habits & Media -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                        <div>
+                            <h2>Digital Usage & Screen Habits</h2>
+                            <p class="section-desc">Quantifying your daily interactions with screens and platforms</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <!-- Daily Usage Hours -->
+                        <div class="input-group">
+                            <label for="Avg_Daily_Usage_Hours">Daily Screen Time: <span id="val-Avg_Daily_Usage_Hours" class="value-badge">4.5</span> hrs</label>
+                            <input type="range" id="Avg_Daily_Usage_Hours" name="Avg_Daily_Usage_Hours" min="1.0" max="9.0" step="0.1" value="4.5" class="custom-slider">
+                            <div class="slider-labels">
+                                <span>1 hr</span>
+                                <span>5 hrs</span>
+                                <span>9 hrs</span>
+                            </div>
+                        </div>
+
+                        <!-- Daily Unlocks -->
+                        <div class="input-group">
+                            <label for="Daily_Unlocks">Daily Phone Unlocks: <span id="val-Daily_Unlocks" class="value-badge">140</span> times</label>
+                            <input type="range" id="Daily_Unlocks" name="Daily_Unlocks" min="60" max="275" step="5" value="140" class="custom-slider">
+                            <div class="slider-labels">
+                                <span>60</span>
+                                <span>160</span>
+                                <span>275</span>
+                            </div>
+                        </div>
+
+                        <!-- Most Used Platform -->
+                        <div class="input-group full-width">
+                            <label>Most Used Social Platform</label>
+                            <div class="pill-options grid-pills" id="Most_Used_Platform-options">
+                                <label class="pill-btn active"><input type="radio" name="Most_Used_Platform" value="Instagram" checked> Instagram</label>
+                                <label class="pill-btn"><input type="radio" name="Most_Used_Platform" value="YouTube"> YouTube</label>
+                                <label class="pill-btn"><input type="radio" name="Most_Used_Platform" value="LinkedIn"> LinkedIn</label>
+                                <label class="pill-btn"><input type="radio" name="Most_Used_Platform" value="Snapchat"> Snapchat</label>
+                                <label class="pill-btn"><input type="radio" name="Most_Used_Platform" value="Twitter"> Twitter</label>
+                                <label class="pill-btn"><input type="radio" name="Most_Used_Platform" value="TikTok"> TikTok</label>
+                                <label class="pill-btn"><input type="radio" name="Most_Used_Platform" value="WhatsApp"> WhatsApp</label>
+                                <label class="pill-btn"><input type="radio" name="Most_Used_Platform" value="Facebook"> Facebook</label>
+                            </div>
+                        </div>
+
+                        <!-- Purpose of Use -->
+                        <div class="input-group full-width">
+                            <label>Primary Purpose of Use</label>
+                            <div class="pill-options" id="Purpose_Of_Use-options">
+                                <label class="pill-btn active"><input type="radio" name="Purpose_Of_Use" value="Entertainment" checked> Entertainment</label>
+                                <label class="pill-btn"><input type="radio" name="Purpose_Of_Use" value="Education"> Education</label>
+                                <label class="pill-btn"><input type="radio" name="Purpose_Of_Use" value="Networking"> Networking</label>
+                                <label class="pill-btn"><input type="radio" name="Purpose_Of_Use" value="News"> News & Current Events</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-divider">
+                    <svg height="24" width="100%" xmlns="http://www.w3.org/2000/svg">
+                        <line x1="0" y1="12" x2="45%" y2="12" stroke="#ebd2d8" stroke-width="1.5" stroke-dasharray="6 4"/>
+                        <circle cx="50%" cy="12" r="4" fill="#d16b84"/>
+                        <line x1="55%" y1="12" x2="100%" y2="100%" stroke="#ebd2d8" stroke-width="1.5" stroke-dasharray="6 4"/>
+                    </svg>
+                </div>
+
+                <!-- Section 3: Lifestyle, Sleep & Stress -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <i class="fa-solid fa-heart-pulse"></i>
+                        </div>
+                        <div>
+                            <h2>Lifestyle & Wellness Balance</h2>
+                            <p class="section-desc">Sleep, physical activity, study workload, and perceived stress</p>
+                        </div>
+                    </div>
+
+                    <div class="form-grid">
+                        <!-- Sleep Hours -->
+                        <div class="input-group">
+                            <label for="Sleep_Hours_Per_Night">Nightly Sleep: <span id="val-Sleep_Hours_Per_Night" class="value-badge">7.0</span> hrs</label>
+                            <input type="range" id="Sleep_Hours_Per_Night" name="Sleep_Hours_Per_Night" min="3.5" max="10.0" step="0.1" value="7.0" class="custom-slider">
+                            <div class="slider-labels">
+                                <span>3.5 hrs</span>
+                                <span>7.0 hrs</span>
+                                <span>10 hrs</span>
+                            </div>
+                        </div>
+
+                        <!-- Physical Activity -->
+                        <div class="input-group">
+                            <label for="Physical_Activity_Hours">Daily Physical Activity: <span id="val-Physical_Activity_Hours" class="value-badge">1.5</span> hrs</label>
+                            <input type="range" id="Physical_Activity_Hours" name="Physical_Activity_Hours" min="0.0" max="4.0" step="0.1" value="1.5" class="custom-slider">
+                            <div class="slider-labels">
+                                <span>0 hrs</span>
+                                <span>2 hrs</span>
+                                <span>4 hrs</span>
+                            </div>
+                        </div>
+
+                        <!-- Study Hours -->
+                        <div class="input-group">
+                            <label for="Study_Hours">Daily Study Hours: <span id="val-Study_Hours" class="value-badge">3.5</span> hrs</label>
+                            <input type="range" id="Study_Hours" name="Study_Hours" min="0.3" max="8.5" step="0.1" value="3.5" class="custom-slider">
+                            <div class="slider-labels">
+                                <span>0.5 hrs</span>
+                                <span>4.0 hrs</span>
+                                <span>8.5 hrs</span>
+                            </div>
+                        </div>
+
+                        <!-- Perceived Stress Level -->
+                        <div class="input-group">
+                            <label>Perceived Stress Level</label>
+                            <div class="pill-options stress-pills" id="Stress_Level-options">
+                                <label class="pill-btn"><input type="radio" name="Stress_Level" value="Low"> Low</label>
+                                <label class="pill-btn active"><input type="radio" name="Stress_Level" value="Medium" checked> Medium</label>
+                                <label class="pill-btn"><input type="radio" name="Stress_Level" value="High"> High</label>
+                                <label class="pill-btn"><input type="radio" name="Stress_Level" value="Very High"> Very High</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <button type="submit" id="submit-btn" class="btn-primary">
+                        <span class="btn-text">Predict Mental Health Score</span>
+                        <span class="btn-sketch-icon">
+                            <!-- Small Pen Nib Icon -->
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 22h20L12 2z"/>
+                                <circle cx="12" cy="14" r="2"/>
+                            </svg>
+                        </span>
+                    </button>
+                </div>
+
+            </form>
+
+            <!-- Result Display Modal/Card -->
+            <section id="result-container" class="result-card hidden">
+                <div class="result-header">
+                    <div class="sketch-decor-header">
+                        <!-- Small Coffee/Tea Cup Line Art Sketch -->
+                        <svg width="60" height="60" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 30 L25 65 C26 70, 54 70, 55 65 L60 30 Z" stroke="#332c30" stroke-width="2.5" fill="#ffffff"/>
+                            <path d="M60 35 C70 35, 72 50, 58 52" stroke="#332c30" stroke-width="2.5" fill="none"/>
+                            <path d="M30 20 Q35 15 32 10" stroke="#d16b84" stroke-width="1.8" stroke-linecap="round"/>
+                            <path d="M40 22 Q45 17 42 12" stroke="#d16b84" stroke-width="1.8" stroke-linecap="round"/>
+                            <path d="M50 20 Q55 15 52 10" stroke="#d16b84" stroke-width="1.8" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3>Mental Health Assessment</h3>
+                    <p>Based on your lifestyle and digital habits profile</p>
+                </div>
+
+                <div class="result-body">
+                    <!-- Gauge Meter -->
+                    <div class="gauge-wrapper">
+                        <div class="score-circle">
+                            <svg class="progress-ring" width="160" height="160">
+                                <circle class="progress-ring-bg" stroke="#f4d3dc" stroke-width="12" fill="transparent" r="68" cx="80" cy="80"/>
+                                <circle id="score-ring" class="progress-ring-fill" stroke="#d16b84" stroke-width="12" stroke-dasharray="427.25" stroke-dashoffset="427.25" stroke-linecap="round" fill="transparent" r="68" cx="80" cy="80"/>
+                            </svg>
+                            <div class="score-display">
+                                <span id="score-value">0.0</span>
+                                <span class="score-max">/ 10</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Status Badge & Summary -->
+                    <div class="status-box">
+                        <div id="status-badge" class="status-badge">Calculating...</div>
+                        <p id="status-summary" class="status-summary"></p>
+                    </div>
+
+                    <!-- Insights & Recommendations -->
+                    <div class="insights-container">
+                        <h4><i class="fa-regular fa-lightbulb"></i> Personalized Lifestyle Micro-Habits</h4>
+                        <div id="tips-list" class="tips-list">
+                            <!-- Injected via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-footer">
+                    <button type="button" id="reassess-btn" class="btn-secondary">
+                        <i class="fa-solid fa-rotate-left"></i> Re-assess Habits
+                    </button>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p class="footer-text">
+                Designed with serenity & light autumn pink aesthetics • Dedicated to mental wellness & balance
+            </p>
+        </footer>
+
+    </div>
+
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
